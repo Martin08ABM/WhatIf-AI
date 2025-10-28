@@ -2,8 +2,9 @@
 // Importación de global.css
 import "../styles/global.css";
 
-// Importa el componente Header
+// Importa los componentes de la web
 import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
 
 // Título cambia dependiendo de la página
 const { title } = Astro.props;
@@ -19,6 +20,9 @@ const { title } = Astro.props;
 	<body>
 		<Header />
 		<slot />
+		<Footer />
+	</body>
+	</body>
 	</body>
 </html>
 
