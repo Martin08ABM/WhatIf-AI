@@ -1,0 +1,92 @@
+<!-- Sección de la caja de texto -->
+<section class="items-center w-full mx-auto">
+  <div
+    class="flex flex-col items-center justify-center p-2 sm:w-8/12 mx-auto md:w-2/4 lg:w-1/2 h-20 my-50"
+  >
+    <p class="text-3xl font-bold text-white text-center mb-4">
+      Crea un nuevo mundo a partir de una frase
+    </p>
+    <!-- Entrada del formulario -->
+    <form id="historiaForm" class="w-full">
+      <textarea
+        name="promptInput"
+        id="promptInput"
+        class="border-2 border-neutral-600 rounded-lg text-white w-full min-h-20 max-h-80 input-effects px-4 py-6"
+        placeholder="Escribe el inicio de tu historia..."></textarea>
+      <button type="submit" class="text-white bg-blue-500 max-w-60 max-h-20 px-4 py-2 rounded-xl">Crear historia</button>
+    </form>
+  </div>
+  <!-- Div para mostrar el resultado -->
+  <div
+    id="resultado"
+    style="background-color: #f4f4f4; border: 1px solid #ccc; padding: 10px; min-height: 50px;"
+  >
+  </div>
+</section>
+
+<!-- Lógica para el envio del mensaje al backend -->
+<script>
+  // Listener del formulario
+  document.getElementById("historiaForm").addEventListener("submit", async function (event) {
+      // Previene que la página se recargue
+      event.preventDefault();
+
+      // Obtener el texto del textarea
+      const inicioHistoria = document.getElementById("promptInput").value;
+
+      // Prepara los datos para enviar como JSON
+      const data = {
+        prompt_inicio: inicioHistoria,
+      };
+
+      // Muestra un mensaje de "cargando"
+      const resultadoDiv = document.getElementById("resultado");
+      resultadoDiv.innerText = "Generando continuación...";
+
+      try {
+        // Llamada a la API
+        const response = await fetch("http://127.0.0.1:8000/recive-prompt/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data), // Convierte el objeto JS en un string JSON
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error HTTP: ${response.status}`);
+        }
+
+        // Obtiene la respuesta JSON de la API
+        const respuestaApi = await response.json();
+
+        // Muestra la continuación en el div de resultado
+        resultadoDiv.innerText = respuestaApi.continuacion;
+      } catch (error) {
+        console.error("Error al contactar la API:", error);
+        resultadoDiv.innerText = `Error: ${error.message}`;
+      }
+    });
+</script>
+
+<!-- Estilos del  -->
+<style>
+  .input-effects {
+    outline: none;
+  }
+  .input-effects:hover {
+    content: "";
+    background: transparent;
+    border-color: blue;
+    border-style: solid;
+    border-width: 2px;
+    transition: all 0.3s ease-in-out;
+    mask-border: none;
+  }
+  .input-effects::placeholder {
+    transform: translateY(4%);
+  }
+  textarea {
+    field-sizing: content;
+  }
+</style>
