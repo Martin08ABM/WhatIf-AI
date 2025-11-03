@@ -1,25 +1,32 @@
 <!-- Sección de la caja de texto -->
 <section class="items-center w-full mx-auto">
   <div
-    class="flex flex-col items-center justify-center p-2 sm:w-8/12 mx-auto md:w-2/4 lg:w-1/2 h-20 my-50"
+    class="flex flex-col items-center justify-center p-2 sm:w-8/12 mx-auto md:w-2/4 lg:w-1/2 sm:my-45 md:my-40 lg:my-48 mt-6"
   >
-    <p class="text-3xl font-bold text-white text-center mb-4">
+    <p class="sm:text-xl md:text-2xl lg:text-4xl font-bold text-white text-center mb-4">
       Crea un nuevo mundo a partir de una frase
     </p>
     <!-- Entrada del formulario -->
-    <form id="historiaForm" class="w-full">
+    <form
+      id="historiaForm"
+      class="w-full flex flex-wrap sm:mt-4 md:mt-4 lg:mt-4 justify-center items-center"
+    >
       <textarea
         name="promptInput"
         id="promptInput"
-        class="border-2 border-neutral-600 rounded-lg text-white w-full min-h-20 max-h-80 input-effects px-4 py-6"
+        class="border-2 border-neutral-600 rounded-lg sm:text-lg md:text-xl lg:text-xl text-white w-full min-h-20 max-h-80 input-effects px-4 py-6 mb-4"
         placeholder="Escribe el inicio de tu historia..."></textarea>
-      <button type="submit" class="text-white bg-blue-500 max-w-60 max-h-20 px-4 py-2 rounded-xl">Crear historia</button>
+      <button
+        type="submit"
+        class="text-white font-bold text-xl bg-blue-700 hover:bg-blue-500 transition-all ease-in-out duration-300 max-w-60 max-h-18 min-h-16 px-2 py-1 rounded-xl ml-4 min-w-40"
+        >Crear historia</button
+      >
     </form>
   </div>
   <!-- Div para mostrar el resultado -->
   <div
     id="resultado"
-    style="background-color: #f4f4f4; border: 1px solid #ccc; padding: 10px; min-height: 50px;"
+    class="bg-transparent border-none px-4 py-2 min-h-[50px] text-xl text-white font-bold text-center justify-center items-center max-w-[70%] sm:mt-auto md:mt-[-4rem] lg:mt-[-4rem] mb-4 mx-auto"
   >
   </div>
 </section>
@@ -34,37 +41,45 @@
       // Obtener el texto del textarea
       const inicioHistoria = document.getElementById("promptInput").value;
 
-      // Prepara los datos para enviar como JSON
-      const data = {
-        prompt_inicio: inicioHistoria,
-      };
+      if (inicioHistoria.value === null || inicioHistoria.value === "") {
+        alert("Tienes que escribir algo para que tu mensaje se procese");
+        console.log(
+          "Tienes que escribir algo para que tu mensaje se procese. Te crees que no me voy a dar cuenta que no has escrito nada, buen intento pero hazlo con otro ;)"
+        );
+        return;
+      } else {
+        // Prepara los datos para enviar como JSON
+        const data = {
+          prompt_inicio: inicioHistoria,
+        };
 
-      // Muestra un mensaje de "cargando"
-      const resultadoDiv = document.getElementById("resultado");
-      resultadoDiv.innerText = "Generando continuación...";
+        // Muestra un mensaje de "cargando"
+        const resultadoDiv = document.getElementById("resultado");
+        resultadoDiv.innerText = "Generando continuación...";
 
-      try {
-        // Llamada a la API
-        const response = await fetch("http://127.0.0.1:8000/recive-prompt/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data), // Convierte el objeto JS en un string JSON
-        });
+        try {
+          // Llamada a la API
+          const response = await fetch("http://127.0.0.1:8000/recive-prompt/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data), // Convierte el objeto JS en un string JSON
+          });
 
-        if (!response.ok) {
-          throw new Error(`Error HTTP: ${response.status}`);
+          if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
+          }
+
+          // Obtiene la respuesta JSON de la API
+          const respuestaApi = await response.json();
+
+          // Muestra la continuación en el div de resultado
+          resultadoDiv.innerText = respuestaApi.continuacion;
+        } catch (error) {
+          console.error("Error al contactar la API:", error);
+          resultadoDiv.innerText = `Error: ${error.message}`;
         }
-
-        // Obtiene la respuesta JSON de la API
-        const respuestaApi = await response.json();
-
-        // Muestra la continuación en el div de resultado
-        resultadoDiv.innerText = respuestaApi.continuacion;
-      } catch (error) {
-        console.error("Error al contactar la API:", error);
-        resultadoDiv.innerText = `Error: ${error.message}`;
       }
     });
 </script>
