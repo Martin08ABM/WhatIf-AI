@@ -82,4 +82,4 @@ async def continuar_historia(request_data: PromptRequest):
 
 if __name__ == "__main__":
     # Comando para iniciar el servidor Uvicorn que mantiene la API "escuchando"
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8000)
