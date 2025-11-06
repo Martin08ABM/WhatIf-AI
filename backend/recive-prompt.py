@@ -32,10 +32,12 @@ GENERATION_CONFIG = types.GenerateContentConfig(
 # --- CONFIGURACIÓN DE FASTAPI ---
 app = FastAPI(title="Narrador de Historias con Gemini")
 
-# --- 2. AÑADE ESTE BLOQUE DE CÓDIGO PARA CORS ---
+# --- CONFIGURACIÓN DEL BLOQUE ORIGINS ---
 origins = [
-    "http://127.0.0.1:4321",
+    "https://whatif-ai-7tru.onrender.com",
     "http://localhost:4321",
+    "http://127.0.0.1:4321"
+
 ]
 
 app.add_middleware(

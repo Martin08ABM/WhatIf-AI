@@ -1,6 +1,9 @@
 ---
 // Importación la librería jsPDF
 import {jsPDF} from "jspdf";
+
+// Import de la URL del backend
+const backUrl = import.meta.env.PUBLIC_API_URL;
 ---
 <!-- Sección de la caja de texto -->
 <section class="items-center w-full mx-auto">
@@ -52,6 +55,7 @@ import {jsPDF} from "jspdf";
 
       // Obtener el texto del textarea
       const inicioHistoria = document.getElementById("promptInput").value;
+      const backUrl = import.meta.env.PUBLIC_API_URL;
 
       if (inicioHistoria.value === null || inicioHistoria.value === "") {
         alert("Tienes que escribir algo para que tu mensaje se procese");
@@ -71,7 +75,7 @@ import {jsPDF} from "jspdf";
 
         try {
           // Llamada a la API
-          const response = await fetch("http://127.0.0.1:8000/recive-prompt/", {
+          const response = await fetch(`${backUrl}/recive-prompt/`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -116,7 +120,7 @@ import {jsPDF} from "jspdf";
       doc.setFont("helvetica", "bold");
       doc.setFontSize(18);
       doc.textWithLink("Historia creada en WhatIf AI", 10, 20, {
-        url: "https://whatif-ai.vercel.app/",
+        url: "https://whatif-ai-7tru.onrender.com",
         target: "_blank",
       });
 
